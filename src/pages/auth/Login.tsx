@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginAPI } from '../api/auth';
-import { emailValidator, passwordValidator } from '../utils/validator';
-import { IUser } from '../../types/users';
+import { loginAPI } from '../../api/auth';
+import { emailValidator, passwordValidator } from '../../utils/validator';
+import { IUser } from '../../../types/users';
 
 const Container = styled.div`
   height: 100vh;

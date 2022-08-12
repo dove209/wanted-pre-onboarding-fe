@@ -1,8 +1,8 @@
 export interface ITodo {
-  content: string;
-  createdAt: string;
   id: string;
   title: string;
+  content: string;
+  createdAt: string;
   updatedAt: string;
 }
 
@@ -14,4 +14,8 @@ export type GetTodosResponse = {
 
 export type GetTodoResponse = {
   data: ITodo;
+};
+
+export type GetTodoDeleteResponse = {
+  data: null;
 };

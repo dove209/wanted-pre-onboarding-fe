@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { signUpAPI } from '../api/auth';
-import { emailValidator, passwordValidator } from '../utils/validator';
+import { signUpAPI } from '../../api/auth';
+import { emailValidator, passwordValidator } from '../../utils/validator';
 
 const Container = styled.div`
   height: 100vh;
