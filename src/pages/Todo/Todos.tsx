@@ -89,8 +89,7 @@ const Button = styled.button`
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [todos, setTodos] = useState<ITodo[]>([]);
-  const [currentIdx, setCurrentIdx] = useState<number | null>(null)
-
+  const [currentIdx, setCurrentIdx] = useState<number>(-1); //현재 선택된 Todo Item Index
 
   useEffect(() => {
     const token = localStorage.getItem('access-token');
@@ -98,8 +97,8 @@ const Home: React.FC = () => {
       navigate('/auth');
     } else {
       loadTodos();
+      syncCurreIdx();
     }
-
   }, []);
 
   // 모든 Todo List 불러오기
@@ -107,24 +106,25 @@ const Home: React.FC = () => {
     try {
       const { data: { data: todos } } = await getTodosAPI();
       setTodos(todos);
-      // 새로고침 시 이전에 선택했던 Todo Item Index 불러오기
-      const prevIdx = localStorage.getItem('currentIdx');
-      if (!!prevIdx) {
-        setCurrentIdx(Number(prevIdx))
-      }
     } catch (e) {
       console.log(e)
     }
   };
 
-  // Todo 아이템 선택
-  const handleTodo = (idx: number) => {
-    setCurrentIdx(idx);
-    history.pushState(null, 'idx')
-    localStorage.setItem('currentIdx', String(idx))
+  // 이전에 선택했던 Todo Item Index로 현재 Todo Item Index 동기화
+  const syncCurreIdx = () => {
+    const prevIdx = localStorage.getItem('prevIdx');
+    if (!!prevIdx) {
+      setCurrentIdx(Number(prevIdx))
+    }
   }
 
 
+  // Todo 아이템 선택
+  const handleTodo = (idx: number) => {
+    setCurrentIdx(idx);
+    localStorage.setItem('prevIdx', String(idx))
+  }
 
   // Todo 아이템 수정 모드로 진입
   const goToEditMode = (id: string) => {
@@ -138,8 +138,8 @@ const Home: React.FC = () => {
       if (data === null) {
         console.log('Todo 삭제 성공!!')
         loadTodos()
-        setCurrentIdx(null);
-        localStorage.removeItem('currentIdx');
+        setCurrentIdx(-1);
+        localStorage.removeItem('prevIdx');
       }
     } catch (e) {
       alert('Todo 삭제 실패;;;')
@@ -150,14 +150,14 @@ const Home: React.FC = () => {
 
   // Todo 아이템 추가하기
   const goToAdd = () => {
-    localStorage.removeItem('currentIdx');
+    localStorage.removeItem('prevIdx');
     navigate('todo/add');
   }
 
   // 로그아웃
   const logout = () => {
     localStorage.removeItem('access-token');
-    localStorage.removeItem('currentIdx');
+    localStorage.removeItem('prevIdx');
     navigate('/auth');
   };
 
@@ -169,21 +169,25 @@ const Home: React.FC = () => {
         <ul>
           {todos.map((todo: ITodo, idx: number) => {
             return (
-              <li key={todo.id} onClick={() => handleTodo(idx)} className={idx === currentIdx ? 'active' : undefined}>
+              <li
+                key={todo.id}
+                onClick={() => handleTodo(idx)}
+                className={idx === currentIdx ? 'active' : undefined}
+              >
                 <h1>{todo.title}</h1>
               </li>
             );
           })}
         </ul>
         <div className='todo'>
-          {currentIdx !== null &&
+          {currentIdx >= 0 &&
             <>
-              <p><b>제목:</b> {todos[currentIdx].title}</p>
-              <p><b>내용:</b> {todos[currentIdx].content}</p>
-              <p><b>생성일:</b> {new Date(todos[currentIdx].createdAt).toLocaleString()}</p>
-              <p><b>수정일:</b> {new Date(todos[currentIdx].updatedAt).toLocaleString()}</p>
-              <Button color='#ffc700' onClick={() => goToEditMode(todos[currentIdx].id)}>수정</Button>
-              <Button color='#ff1d0a' onClick={() => removeTodo(todos[currentIdx].id)}>삭제</Button>
+              <p><b>제목:</b> {todos[currentIdx]?.title}</p>
+              <p><b>내용:</b> {todos[currentIdx]?.content}</p>
+              <p><b>생성일:</b> {new Date(todos[currentIdx]?.createdAt).toLocaleString()}</p>
+              <p><b>수정일:</b> {new Date(todos[currentIdx]?.updatedAt).toLocaleString()}</p>
+              <Button color='#ffc700' onClick={() => goToEditMode(todos[currentIdx]?.id)}>수정</Button>
+              <Button color='#ff1d0a' onClick={() => removeTodo(todos[currentIdx]?.id)}>삭제</Button>
             </>
           }
         </div>

@@ -55,6 +55,7 @@ const TodoAdd: React.FC = () => {
     const [title, setTitle] = useState<string>('');
     const [content, setContent] = useState<string>('');
 
+    // Todo 아이템 추가하기
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -63,11 +64,11 @@ const TodoAdd: React.FC = () => {
                 content: content
             })
             if (data) {
-                console.log('Todo 등록 성공!!!')
+                console.log('Todo 추가 성공!!!')
                 navigate('/');
             }
         } catch (e) {
-            alert('Todo 등록 실패;;;')
+            alert('Todo 추가 실패;;;')
             console.log(e)
         }
     }

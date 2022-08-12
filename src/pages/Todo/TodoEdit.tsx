@@ -59,13 +59,12 @@ const TodoEdit: React.FC = () => {
         content: ''
     });
 
-
     useEffect(() => {
-        loadTodo()
+        getTodo()
     }, [])
 
-    // Todo 아이템 불러오기
-    const loadTodo = async () => {
+    // ID로 Todo 아이템 불러오기
+    const getTodo = async () => {
         try {
             const { data: { data: todo } } = await getTodoByIdAPI(id);
             setTodo(todo)
@@ -74,7 +73,7 @@ const TodoEdit: React.FC = () => {
         }
     };
 
-
+    // Todo 아이템 수정하기
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { signUpAPI } from '../../api/auth';
 import { emailValidator, passwordValidator } from '../../utils/validator';
+import { IUser, IUserInputValid } from '../../../types/users';
 
 const Container = styled.div`
   height: 100vh;
@@ -22,6 +23,7 @@ const FormBox = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
+
   h1 {
     font-size: 3rem;
     font-weight: bold;
@@ -60,12 +62,12 @@ const FormBox = styled.div`
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-  const [loginForm, setLoginForm] = useState({
+  const [loginForm, setLoginForm] = useState<IUser>({
     email: '',
     password: '',
   });
 
-  const [isLoginValid, setIsLoginValid] = useState({
+  const [isSignUpValid, setIsSignUpValid] = useState<IUserInputValid>({
     email: false,
     password: false,
   });
@@ -76,8 +78,8 @@ const SignUp: React.FC = () => {
       ...loginForm,
       email: value,
     });
-    setIsLoginValid({
-      ...isLoginValid,
+    setIsSignUpValid({
+      ...isSignUpValid,
       email: emailValidator(value),
     });
   };
@@ -88,15 +90,16 @@ const SignUp: React.FC = () => {
       ...loginForm,
       password: value,
     });
-    setIsLoginValid({
-      ...isLoginValid,
+    setIsSignUpValid({
+      ...isSignUpValid,
       password: passwordValidator(value),
     });
   };
 
+  // 회원가입 하기
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isLoginValid.email && isLoginValid.password) {
+    if (isSignUpValid.email && isSignUpValid.password) {
       try {
         const {
           data: { token },
@@ -128,7 +131,7 @@ const SignUp: React.FC = () => {
             value={loginForm.email}
             autoFocus
             className={
-              !isLoginValid.email && loginForm.email ? 'notVaild' : undefined
+              !isSignUpValid.email && loginForm.email ? 'notVaild' : undefined
             }
           />
           <input
@@ -139,12 +142,12 @@ const SignUp: React.FC = () => {
             onChange={handlePassword}
             value={loginForm.password}
             className={
-              !isLoginValid.password && loginForm.password ? 'notVaild' : undefined
+              !isSignUpValid.password && loginForm.password ? 'notVaild' : undefined
             }
           />
           <button
             className={
-              isLoginValid.email && isLoginValid.password ? 'valid' : undefined
+              isSignUpValid.email && isSignUpValid.password ? 'valid' : undefined
             }
           >
             가입하기

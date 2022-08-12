@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginAPI } from '../../api/auth';
 import { emailValidator, passwordValidator } from '../../utils/validator';
-import { IUser } from '../../../types/users';
+import { IUser, IUserInputValid } from '../../../types/users';
 
 const Container = styled.div`
   height: 100vh;
@@ -66,10 +66,18 @@ const Login: React.FC = () => {
     password: '',
   });
 
-  const [isLoginValid, setIsLoginValid] = useState({
+  const [isLoginValid, setIsLoginValid] = useState<IUserInputValid>({
     email: false,
     password: false,
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem('access-token');
+    if (token) {
+      navigate('/');
+    }
+  }, []);
+
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -95,6 +103,7 @@ const Login: React.FC = () => {
     });
   };
 
+  // 로그인 하기
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isLoginValid.email && isLoginValid.password) {
@@ -115,13 +124,6 @@ const Login: React.FC = () => {
       }
     }
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem('access-token');
-    if (token) {
-      navigate('/');
-    }
-  }, []);
 
   return (
     <Container>
