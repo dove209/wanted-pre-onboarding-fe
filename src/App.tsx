@@ -2,9 +2,9 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import SignUp from './pages/auth/SignUp';
-import Todos from './pages/Todo/Todos';
-import TodoAdd from './pages/Todo/TodoAdd';
-import TodoEdit from './pages/Todo/TodoEdit';
+import Todos from './pages/todo/Todos';
+import TodoAdd from './pages/todo/TodoAdd';
+import TodoEdit from './pages/todo/TodoEdit';
 
 function App() {
   return (
