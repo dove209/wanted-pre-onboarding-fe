@@ -80,7 +80,8 @@ const Login: React.FC = () => {
 
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+    const { value } = e.currentTarget;
+    console.log(value);
     setLoginForm({
       ...loginForm,
       email: value,
@@ -92,7 +93,7 @@ const Login: React.FC = () => {
   };
 
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+    const { value } = e.currentTarget;
     setLoginForm({
       ...loginForm,
       password: value,
