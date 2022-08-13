@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { signUpAPI } from '../../api/auth';
-import { emailValidator, passwordValidator } from '../../utils/validator';
+import * as Validator from '../../utils/validator';
 import { IUser, IUserInputValid } from '../../../types/users';
 
 const Container = styled.div`
@@ -73,26 +73,26 @@ const SignUp: React.FC = () => {
   });
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+    const { value } = e.currentTarget;
     setLoginForm({
       ...loginForm,
       email: value,
     });
     setIsSignUpValid({
       ...isSignUpValid,
-      email: emailValidator(value),
+      email: Validator.emailValidator(value),
     });
   };
 
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+    const { value } = e.currentTarget;
     setLoginForm({
       ...loginForm,
       password: value,
     });
     setIsSignUpValid({
       ...isSignUpValid,
-      password: passwordValidator(value),
+      password: Validator.passwordValidator(value),
     });
   };
 

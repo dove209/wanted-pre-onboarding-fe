@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginAPI } from '../../api/auth';
-import { emailValidator, passwordValidator } from '../../utils/validator';
+import * as Validator from '../../utils/validator';
 import { IUser, IUserInputValid } from '../../../types/users';
 
 const Container = styled.div`
@@ -81,14 +81,13 @@ const Login: React.FC = () => {
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
-    console.log(value);
     setLoginForm({
       ...loginForm,
       email: value,
     });
     setIsLoginValid({
       ...isLoginValid,
-      email: emailValidator(value),
+      email: Validator.emailValidator(value),
     });
   };
 
@@ -100,7 +99,7 @@ const Login: React.FC = () => {
     });
     setIsLoginValid({
       ...isLoginValid,
-      password: passwordValidator(value),
+      password: Validator.passwordValidator(value),
     });
   };
 
@@ -119,9 +118,11 @@ const Login: React.FC = () => {
           localStorage.setItem('access-token', token);
           navigate('/');
         }
-      } catch (e) {
-        alert('로그인 실패...')
-        console.log(e);
+      } catch (error) {
+        alert('로그인 실패...');
+        if(error instanceof Error) {
+          console.log(error.message);  
+        }
       }
     }
   };
