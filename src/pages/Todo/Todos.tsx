@@ -4,6 +4,8 @@ import { ITodo } from '../../../types/todos';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { getTodosAPI, deleteTodoAPI } from '../../api/todo';
+import { IAuth } from '../../../types/auth';
+import { useAuth } from '../../hooks/useAuth';
 
 
 const Container = styled.div`
@@ -89,17 +91,14 @@ const Button = styled.button`
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth() as IAuth;
+
   const [todos, setTodos] = useState<ITodo[]>([]);
   const [currentIdx, setCurrentIdx] = useState<number>(-1); //현재 선택된 Todo Item Index
 
   useEffect(() => {
-    const token = localStorage.getItem('access-token');
-    if (!token) {
-      navigate('/auth');
-    } else {
-      loadTodos();
-      syncCurreIdx();
-    }
+    loadTodos();
+    syncCurreIdx();
   }, []);
 
   // 모든 Todo List 불러오기
@@ -161,10 +160,9 @@ const Home: React.FC = () => {
   }
 
   // 로그아웃
-  const logout = () => {
-    localStorage.removeItem('access-token');
+  const handleLogout = () => {
     localStorage.removeItem('prevIdx');
-    navigate('/auth');
+    logout()
   };
 
 
@@ -200,7 +198,7 @@ const Home: React.FC = () => {
       </div>
       <div className='footer'>
         <Button onClick={goToAdd} color='#0bbe22'>추가하기</Button>
-        <Button onClick={logout}>나가기</Button>
+        <Button onClick={handleLogout}>나가기</Button>
       </div>
 
     </Container>

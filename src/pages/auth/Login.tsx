@@ -5,6 +5,8 @@ import { AxiosError } from 'axios';
 import { loginAPI } from '../../api/auth';
 import * as Validator from '../../utils/validator';
 import { IUser, IUserInputValid } from '../../../types/users';
+import { IAuth } from '../../../types/auth';
+import { useAuth } from '../../hooks/useAuth';
 
 const Container = styled.div`
   height: 100vh;
@@ -61,7 +63,7 @@ const FormBox = styled.div`
 `;
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  const { login } = useAuth() as IAuth;
   const [loginForm, setLoginForm] = useState<IUser>({
     email: '',
     password: '',
@@ -71,13 +73,6 @@ const Login: React.FC = () => {
     email: false,
     password: false,
   });
-
-  useEffect(() => {
-    const token = localStorage.getItem('access-token');
-    if (token) {
-      navigate('/');
-    }
-  }, []);
 
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,8 +111,7 @@ const Login: React.FC = () => {
           password: loginForm.password,
         });
         if (token) {
-          localStorage.setItem('access-token', token);
-          navigate('/');
+          login(token);
         }
       } catch (error) {
         if(error instanceof AxiosError) {
@@ -163,7 +157,7 @@ const Login: React.FC = () => {
           </button>
         </form>
         <div className="signUp">
-          아직 회원이 아니십니까? <Link to={'/signUp'}>회원가입</Link>
+          아직 회원이 아니십니까? <Link to={'/auth/signUp'}>회원가입</Link>
         </div>
       </FormBox>
     </Container>
