@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { getTodoByIdAPI, updateTodoAPI } from '../../api/todo';
 import { TodoInputType } from '../../../types/todos';
 
@@ -67,9 +68,13 @@ const TodoEdit: React.FC = () => {
     const getTodo = async () => {
         try {
             const { data: { data: todo } } = await getTodoByIdAPI(id);
-            setTodo(todo)
-        } catch (e) {
-            console.log(e)
+            if(!!todo) {
+                setTodo(todo)
+            }
+        } catch (error) {
+            if(error instanceof AxiosError) {
+              alert(error.response?.data.details)
+            }
         }
     };
 

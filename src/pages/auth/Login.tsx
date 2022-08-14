@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { loginAPI } from '../../api/auth';
 import * as Validator from '../../utils/validator';
 import { IUser, IUserInputValid } from '../../../types/users';
@@ -119,9 +120,8 @@ const Login: React.FC = () => {
           navigate('/');
         }
       } catch (error) {
-        alert('로그인 실패...');
-        if(error instanceof Error) {
-          console.log(error.message);  
+        if(error instanceof AxiosError) {
+          alert(error.response?.data.details)
         }
       }
     }

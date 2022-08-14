@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { creatTodoAPI } from '../../api/todo';
 
 const Container = styled.div`
@@ -63,13 +64,14 @@ const TodoAdd: React.FC = () => {
                 title: title,
                 content: content
             })
-            if (data) {
+            if (!!data) {
                 console.log('Todo 추가 성공!!!')
                 navigate('/');
             }
-        } catch (e) {
-            alert('Todo 추가 실패;;;')
-            console.log(e)
+        } catch (error) {
+            if(error instanceof AxiosError) {
+              alert(error.response?.data.details)
+            }
         }
     }
 

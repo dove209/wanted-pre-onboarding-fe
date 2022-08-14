@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ITodo } from '../../../types/todos';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { getTodosAPI, deleteTodoAPI } from '../../api/todo';
 
 
@@ -105,9 +106,13 @@ const Home: React.FC = () => {
   const loadTodos = async () => {
     try {
       const { data: { data: todos } } = await getTodosAPI();
-      setTodos(todos);
-    } catch (e) {
-      console.log(e)
+      if(!!todos) {
+        setTodos(todos);
+      }
+    } catch (error) {
+      if(error instanceof AxiosError) {
+        alert(error.response?.data.details)
+      }
     }
   };
 
@@ -141,9 +146,10 @@ const Home: React.FC = () => {
         setCurrentIdx(-1);
         localStorage.removeItem('prevIdx');
       }
-    } catch (e) {
-      alert('Todo 삭제 실패;;;')
-      console.log(e)
+    } catch (error) {
+      if(error instanceof AxiosError) {
+        alert(error.response?.data.details)
+      }
     }
   }
 
@@ -180,7 +186,7 @@ const Home: React.FC = () => {
           })}
         </ul>
         <div className='todo'>
-          {currentIdx >= 0 &&
+          {currentIdx > -1 &&
             <>
               <p><b>제목:</b> {todos[currentIdx]?.title}</p>
               <p><b>내용:</b> {todos[currentIdx]?.content}</p>

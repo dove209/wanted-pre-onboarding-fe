@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { signUpAPI } from '../../api/auth';
 import * as Validator from '../../utils/validator';
 import { IUser, IUserInputValid } from '../../../types/users';
+
 
 const Container = styled.div`
   height: 100vh;
@@ -111,9 +113,10 @@ const SignUp: React.FC = () => {
           alert('회원가입이 성공 하였습니다.');
           navigate('/auth');
         }
-      } catch (e) {
-        alert('회원가입이 실패 하였습니다.');
-        console.log(e);
+      } catch (error) {
+        if(error instanceof AxiosError) {
+          alert(error.response?.data.details)
+        }
       }
     }
   };
