@@ -8,7 +8,7 @@ export const PublicRoute: React.FC = () => {
     const { user } = useAuth() as IAuth;
     const outlet = useOutlet();
     if(user) {
-        return <Navigate to='/' replace/>
+        return <Navigate to='/' replace />
     }
 
     return (
