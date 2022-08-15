@@ -13,14 +13,16 @@ import { ProtectedRoute } from './components/ProtectedRoute'; //로그인 필수
 function App() {
   return (
     <Routes>
-      <Route path='auth' element={<PublicRoute />}>
+      <Route path='auth/*' element={<PublicRoute />}>
         <Route path='login' element={<Login />} />
         <Route path='signUp' element={<SignUp />} />
       </Route>
       <Route element={<ProtectedRoute />}>
         <Route path='/' element={<Todos />} />
-        <Route path='/todo/add' element={<TodoAdd />} />
-        <Route path='/todo/:id' element={<TodoEdit />} />
+        <Route path='todo/*'>
+          <Route path='add' element={<TodoAdd />} />
+          <Route path=':id' element={<TodoEdit />} />
+        </Route>
       </Route>
       <Route path='*' element={<NotFound />} />
     </Routes>
