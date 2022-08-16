@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import { AxiosError } from 'axios';
 import { loginAPI } from '../../api/auth';
 import * as Validator from '../../utils/validator';
 import { IUser, IUserInputValid } from '../../../types/users';
 import { IAuth } from '../../../types/auth';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/auth/useAuth';
 
 const Container = styled.div`
   height: 100vh;
@@ -74,7 +75,6 @@ const Login: React.FC = () => {
     password: false,
   });
 
-
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
     setLoginForm({
@@ -103,23 +103,28 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isLoginValid.email && isLoginValid.password) {
-      try {
-        const {
-          data: { token },
-        } = await loginAPI({
-          email: loginForm.email,
-          password: loginForm.password,
-        });
-        if (token) {
-          login(token);
-        }
-      } catch (error) {
-        if(error instanceof AxiosError) {
-          alert(error.response?.data.details)
-        }
-      }
+      loginMutaion.mutate({
+        email: loginForm.email,
+        password: loginForm.password,
+      });
     }
   };
+
+  const loginMutaion = useMutation(loginAPI, {
+    onSuccess: (data) => {
+      const {
+        data: { token },
+      } = data;
+      if (token) {
+        login(token);
+      }
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data.details);
+      }
+    },
+  });
 
   return (
     <Container>
@@ -145,7 +150,9 @@ const Login: React.FC = () => {
             onChange={handlePassword}
             value={loginForm.password}
             className={
-              !isLoginValid.password && loginForm.password ? 'notVaild' : undefined
+              !isLoginValid.password && loginForm.password
+                ? 'notVaild'
+                : undefined
             }
           />
           <button

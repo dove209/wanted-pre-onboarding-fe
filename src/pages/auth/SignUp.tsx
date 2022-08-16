@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import { AxiosError } from 'axios';
 import { signUpAPI } from '../../api/auth';
 import * as Validator from '../../utils/validator';
 import { IUser, IUserInputValid } from '../../../types/users';
-
 
 const Container = styled.div`
   height: 100vh;
@@ -64,7 +64,7 @@ const FormBox = styled.div`
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-  const [loginForm, setLoginForm] = useState<IUser>({
+  const [signUpForm, setSignUpForm] = useState<IUser>({
     email: '',
     password: '',
   });
@@ -76,8 +76,8 @@ const SignUp: React.FC = () => {
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
-    setLoginForm({
-      ...loginForm,
+    setSignUpForm({
+      ...signUpForm,
       email: value,
     });
     setIsSignUpValid({
@@ -88,8 +88,8 @@ const SignUp: React.FC = () => {
 
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
-    setLoginForm({
-      ...loginForm,
+    setSignUpForm({
+      ...signUpForm,
       password: value,
     });
     setIsSignUpValid({
@@ -102,24 +102,29 @@ const SignUp: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSignUpValid.email && isSignUpValid.password) {
-      try {
-        const {
-          data: { token },
-        } = await signUpAPI({
-          email: loginForm.email,
-          password: loginForm.password,
-        });
-        if (token) {
-          alert('회원가입이 성공 하였습니다.');
-          navigate('/auth');
-        }
-      } catch (error) {
-        if(error instanceof AxiosError) {
-          alert(error.response?.data.details)
-        }
-      }
+      signUpMutation.mutate({
+        email: signUpForm.email,
+        password: signUpForm.password,
+      });
     }
   };
+
+  const signUpMutation = useMutation(signUpAPI, {
+    onSuccess: (data) => {
+      const {
+        data: { token },
+      } = data;
+      if (token) {
+        alert('회원가입이 성공 하였습니다.');
+        navigate('/auth/login');
+      }
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data.details);
+      }
+    },
+  });
 
   return (
     <Container>
@@ -131,10 +136,10 @@ const SignUp: React.FC = () => {
             name="email"
             placeholder="이메일"
             onChange={handleEmail}
-            value={loginForm.email}
+            value={signUpForm.email}
             autoFocus
             className={
-              !isSignUpValid.email && loginForm.email ? 'notVaild' : undefined
+              !isSignUpValid.email && signUpForm.email ? 'notVaild' : undefined
             }
           />
           <input
@@ -143,14 +148,18 @@ const SignUp: React.FC = () => {
             autoComplete="true"
             placeholder="비밀번호 (대문자, 숫자, 특수문자 포함)"
             onChange={handlePassword}
-            value={loginForm.password}
+            value={signUpForm.password}
             className={
-              !isSignUpValid.password && loginForm.password ? 'notVaild' : undefined
+              !isSignUpValid.password && signUpForm.password
+                ? 'notVaild'
+                : undefined
             }
           />
           <button
             className={
-              isSignUpValid.email && isSignUpValid.password ? 'valid' : undefined
+              isSignUpValid.email && isSignUpValid.password
+                ? 'valid'
+                : undefined
             }
           >
             가입하기

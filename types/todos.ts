@@ -1,21 +1,10 @@
 export interface ITodo {
   id: string;
-  title: string;
-  content: string;
+  title: string | undefined;
+  content: string | undefined;
   createdAt: string;
   updatedAt: string;
 }
 
 export type TodoInputType = Pick<ITodo, 'title' | 'content'>;
-
-export type GetTodosResponse = {
-  data: ITodo[];
-};
-
-export type GetTodoResponse = {
-  data: ITodo;
-};
-
-export type GetTodoDeleteResponse = {
-  data: null;
-};
+export type TodoUpdateType = Pick<ITodo, 'id' | 'title' | 'content'>;
