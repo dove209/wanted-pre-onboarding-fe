@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from './useLocalStorage';
+import storage from './useLocalStorage';
 import { IAuth } from '../../../types/auth';
 
 const AuthContext = createContext<IAuth | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useLocalStorage('user', null);
+  const [user, setUser] = storage('user', null);
   const navigate = useNavigate();
 
   const login = async (data: string) => {
