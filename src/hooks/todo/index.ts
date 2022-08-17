@@ -1,10 +1,10 @@
 import { AxiosError } from 'axios';
-import { useMutation, UseMutationResult, useQuery, UseQueryResult } from 'react-query';
+import { useMutation, UseMutationResult, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { getTodosAPI, getTodoByIdAPI, creatTodoAPI, deleteTodoAPI, updateTodoAPI } from '../../api/todo';
 import { ITodo } from '../../../types/todos';
 
 export const useTodos = (options = {}): UseQueryResult<ITodo[], AxiosError> => {
-    return useQuery('todos', getTodosAPI, { ...options });
+    return useQuery(['todos'], getTodosAPI, { ...options });
 }
 
 export const useTodo = (id: string | undefined, options = {}): UseQueryResult<ITodo, AxiosError> => {

@@ -3,9 +3,6 @@ import {
   TodoUpdateType,
 } from '../../types/todos';
 import axios from '.';
-axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
-  'access-token'
-)}`;
 
 // TODO 리스트 가져오기
 export const getTodosAPI = async () => { 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { loginAPI } from '../../api/auth';
 import * as Validator from '../../utils/validator';
