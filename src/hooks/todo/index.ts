@@ -2,13 +2,14 @@ import { AxiosError } from 'axios';
 import { useMutation, UseMutationResult, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { getTodosAPI, getTodoByIdAPI, creatTodoAPI, deleteTodoAPI, updateTodoAPI } from '../../api/todo';
 import { ITodo } from '../../../types/todos';
+import todoCache from '../../model/todo';
 
 export const useTodos = (options = {}): UseQueryResult<ITodo[], AxiosError> => {
-    return useQuery(['todos'], getTodosAPI, { ...options });
+    return useQuery(todoCache.todos, getTodosAPI, { ...options });
 }
 
 export const useTodo = (id: string | undefined, options = {}): UseQueryResult<ITodo, AxiosError> => {
-    return useQuery(['todo', id], () => getTodoByIdAPI(id), {
+    return useQuery(todoCache.todoById(id), () => getTodoByIdAPI(id), {
         ...options,
         enabled: !!id, //id가 존재할 때만 쿼리 요청
     })

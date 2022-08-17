@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { deleteTodoAPI } from '../../api/todo';
 import { ITodo } from '../../../types/todos';
 import { IAuth } from '../../../types/auth';
 import { useAuth } from '../../hooks/auth/useAuth';
 import { useDeleteTodoMuation, useTodos } from '../../hooks/todo';
+import todoCache from '../../model/todo';
 
 const Container = styled.div`
   position: absolute;
@@ -133,7 +133,7 @@ const Home: React.FC = () => {
           console.log('Todo 삭제 성공!!');
           setCurrentIdx(-1);
           localStorage.removeItem('prevIdx');
-          queryClient.invalidateQueries(['todos']);
+          queryClient.invalidateQueries(todoCache.todos);
         },
         onError: (error) => {
           if (error instanceof AxiosError) {
