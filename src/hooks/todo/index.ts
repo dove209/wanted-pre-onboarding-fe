@@ -5,7 +5,7 @@ import { ITodo } from '../../../types/todos';
 import todoCache from '../../model/todo';
 
 export const useTodos = (options = {}): UseQueryResult<ITodo[], AxiosError> => {
-    return useQuery(todoCache.todos, getTodosAPI, { ...options });
+    return useQuery(todoCache.todos, getTodosAPI, { staleTime: 8000 });
 }
 
 export const useTodo = (id: string | undefined, options = {}): UseQueryResult<ITodo, AxiosError> => {
