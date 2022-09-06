@@ -15,7 +15,6 @@ const useLocalStorage = (keyName: string, defaultValue: string | null) => {
 
   const setValue = (newValue: string | null) => {
     try {
-      console.log(newValue);
       if (!!newValue) {
         localStorage.setItem(keyName, JSON.stringify(newValue));
       } else {
